@@ -1,0 +1,10 @@
+[package]
+name = "aqi"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+serde = { version = "1.0.229", features = ["default", "derive"] }
+serde_json = { version = "1.0.151", features = ["default"] }
+reqwest = { version = "0.13.4", features = ["blocking"] }
+time = { version = "0.3.55", features = ["macros", "parsing", "local-offset"] }
