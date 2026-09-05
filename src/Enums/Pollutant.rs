@@ -1,9 +1,5 @@
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Hash, Eq, PartialEq, Copy, Clone)]
 pub enum Pollutant{
     Pm25,
-    Pm10,
-    O3,
-    No2,
-    So2,
-    Co
+    Pm10
 }

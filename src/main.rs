@@ -2,6 +2,7 @@ use time::{OffsetDateTime, UtcOffset};
 use crate::errors::AppError::AppError;
 use crate::utils::ConverterAirQualityRawForReading::{at_hour, to_reading};
 use crate::utils::HttpClient::http_client;
+use crate::utils::SeriesAndAgreggateFunction::to_series;
 
 mod model;
 mod utils;
@@ -35,8 +36,9 @@ fn main() -> Result<(), AppError> {
        "Falha ao capturar o corte na data".to_string()
     }).map_err(|e| AppError::FalhaMontagemDadosAplicacao(e.to_string()))?;
     let lista_filtrada = at_hour(&lista_montada, horario_corte.at);
-
     println!("{:#?}", lista_filtrada);
+    
+    let _ = to_series(&lista_montada, horario_corte.at);
 
     Ok(())
 

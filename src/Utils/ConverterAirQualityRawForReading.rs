@@ -50,7 +50,7 @@ pub fn at_hour(readings: &Vec<Reading>, data_offset: OffsetDateTime) -> Vec<Read
 
     for i in readings{
 
-        if i.at <= data_offset{
+        if i.at.eq(&data_offset) {
             vec_reading.push(*i);
         }
 
