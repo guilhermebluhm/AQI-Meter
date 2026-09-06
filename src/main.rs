@@ -1,7 +1,9 @@
-use time::{OffsetDateTime, UtcOffset};
+use time::{Duration, OffsetDateTime, UtcOffset};
 use crate::errors::AppError::AppError;
+use crate::model::Window::Window;
 use crate::utils::ConverterAirQualityRawForReading::{at_hour, to_reading};
 use crate::utils::HttpClient::http_client;
+use crate::utils::MountSeries::aggregate;
 use crate::utils::SeriesAndAgreggateFunction::to_series;
 
 mod model;
@@ -38,7 +40,17 @@ fn main() -> Result<(), AppError> {
     let lista_filtrada = at_hour(&lista_montada, horario_corte.at);
     println!("{:#?}", lista_filtrada);
     
-    let _ = to_series(&lista_montada, horario_corte.at);
+    let series_data = to_series(&lista_montada, horario_corte.at);
+    if let Ok(x) = series_data{
+        let w = Window{
+            duration: Duration::hours(24),
+            ending_at: horario_corte.at,
+            min_coverege: 0.75
+        };
+        for i in x.values(){
+            aggregate(i, &w);
+        }
+    }
 
     Ok(())
 

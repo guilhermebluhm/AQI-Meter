@@ -8,6 +8,6 @@ pub struct Aggregate {
     pub expected: usize,
     pub present: usize,
     pub covegere: f64,
-    pub peak_at: Option<OffsetDateTime>,
-    pub has_forecast: bool,
+    pub has_forecast: bool, //para registrar se houve ruido de forecast durante a montagem da amostra intervalar
+                            //por enquanto esta false por default
 }
