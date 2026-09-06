@@ -2,6 +2,7 @@ use time::OffsetDateTime;
 use crate::model::dto::Concentration::Concentration;
 use crate::model::Window::Window;
 
+#[derive(Debug)]
 pub struct Aggregate {
     pub value: Concentration,
     pub window: Window,

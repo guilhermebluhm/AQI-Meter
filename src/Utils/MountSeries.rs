@@ -39,7 +39,7 @@ pub fn aggregate(series: &Series, w: &Window) -> WindowResult {
                                             f.kind == PointKind::Analysis).collect::<Vec<&Point>>();
 
     let n_presente = intervalo_dados_leitura.len();
-    let n_esperado = (w.duration / series.step) as usize;
+    let n_esperado = (w.duration.whole_hours() / ((series.step.whole_seconds()/60)/60)) as usize;
 
     if n_presente.eq(&0) {
         return WindowResult::NoData
@@ -49,10 +49,10 @@ pub fn aggregate(series: &Series, w: &Window) -> WindowResult {
     }
 
     let media_valores_coletados = intervalo_dados_leitura.iter().map(|m| m.value).sum::<f64>();
-    let media_coletada = media_valores_coletados as usize / n_presente;
+    let media_coletada = media_valores_coletados / n_presente as f64;
 
     let concentration = Concentration{
-        value: media_coletada as f64,
+        value: media_coletada,
         unit: Unit::MicrogramsPerCubicMeter
     };
 

@@ -1,4 +1,7 @@
+use std::collections::HashMap;
 use time::{Duration, OffsetDateTime, UtcOffset};
+use crate::enums::Pollutant::Pollutant;
+use crate::enums::WindowResult::WindowResult;
 use crate::errors::AppError::AppError;
 use crate::model::Window::Window;
 use crate::utils::ConverterAirQualityRawForReading::{at_hour, to_reading};
@@ -37,9 +40,9 @@ fn main() -> Result<(), AppError> {
     let horario_corte = lista_montada.get(idx_corte-1).ok_or_else(||{
        "Falha ao capturar o corte na data".to_string()
     }).map_err(|e| AppError::FalhaMontagemDadosAplicacao(e.to_string()))?;
-    let lista_filtrada = at_hour(&lista_montada, horario_corte.at);
-    println!("{:#?}", lista_filtrada);
-    
+    //let lista_filtrada = at_hour(&lista_montada, horario_corte.at);
+
+    let mut mapa_agregador: HashMap<Pollutant, WindowResult> = HashMap::new();
     let series_data = to_series(&lista_montada, horario_corte.at);
     if let Ok(x) = series_data{
         let w = Window{
@@ -48,10 +51,17 @@ fn main() -> Result<(), AppError> {
             min_coverege: 0.75
         };
         for i in x.values(){
-            aggregate(i, &w);
+            let wresult = aggregate(i, &w);
+            if i.polluent == Pollutant::Pm25{
+                mapa_agregador.insert(i.polluent, wresult);
+            }
+            else{
+                mapa_agregador.insert(i.polluent, wresult);
+            }
         }
     }
 
+    println!("{:#?}", mapa_agregador);
     Ok(())
 
 }
